@@ -1,0 +1,95 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Protrack {
+  id: Int
+  created_at: DateTime!
+  update_at: DateTime!
+  issue: String!
+  description: String!
+  user: User!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Project {
+  id: Int
+  created_at: DateTime!
+  update_at: DateTime!
+  name: String!
+}
+
+type User {
+  id: Int
+  created_at: DateTime!
+  update_at: DateTime!
+  social_id: String!
+  code: String
+  allocation: String
+  last_name: String!
+  first_name: String!
+  full_name: String
+  picture: String!
+  email: String!
+  active: Boolean!
+  role: String!
+  projects: [Project!]!
+  protracks: [Protrack!]!
+}
+
+type Auth {
+  first_name: String!
+  last_name: String!
+  email: String!
+  picture: String!
+  role: String!
+  active: Boolean!
+  token: String!
+}
+
+type Query {
+  contributor(id: Int!): User!
+  contributors: [User!]!
+  project(id: Int!): Project!
+  projects: [Project!]!
+  project_contributors(id: Int!): [User!]!
+  protrack(id: Int!): Protrack!
+  protracks: [Protrack!]!
+}
+
+type Mutation {
+  update_contributor(data: UpdateUserInput!, id: Int!): User!
+  googleLogin(access_token: String!): Auth!
+  create_project(data: CreateProjectInput!): Project!
+  update_project(data: UpdateProjectInput!, id: Int!): Project!
+  remove_project(id: Int!): Project!
+  add_contributors(contributorIds: [Int!]!, projectId: Int!): Boolean!
+  remove_contributors(contributorIds: [Int!]!, projectId: Int!): Boolean!
+  add_protrack(protrack: CreateProtrackInput!, projectId: Int!, contributorId: Int!): Protrack!
+}
+
+input UpdateUserInput {
+  code: String
+  allocation: String
+}
+
+input CreateProjectInput {
+  name: String!
+}
+
+input UpdateProjectInput {
+  name: String
+}
+
+input CreateProtrackInput {
+  issue: String!
+  description: String!
+}
+
+type Subscription {
+  protrackAdded(projectId: Int!): Protrack!
+}

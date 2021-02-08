@@ -1,0 +1,25 @@
+server:
+  PORT: 4000
+
+db:
+  type: postgres
+  host: localhost
+  port: 5432
+  username: postgres
+  password: postgres
+  database: protrack
+  synchronize: true
+  migrationsRun: false
+  logging: false
+
+graphql:
+  debug: true
+  playground: true
+
+auth:
+  secret: Sjljadsf&#(*:PÇX)
+  expiresIn: 7d
+
+google:
+  clientID: 358343688380-d09nvdt19t4su43il3c3qnltr2dellkj.apps.googleusercontent.com
+  clientSecret: YOizM-7-Mnbltnicvcb_iLpt
