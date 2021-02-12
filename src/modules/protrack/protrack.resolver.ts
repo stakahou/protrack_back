@@ -8,11 +8,14 @@ import {
   Subscription,
 } from '@nestjs/graphql';
 import { PubSubEngine } from 'apollo-server-express';
+import { Auth } from 'src/decorators/auth.decorator';
+import { User } from 'src/decorators/user.decorator';
 import { Event } from '../shared/events.enum';
 import { CreateProtrackInput } from './inputs/create-protrack.input';
 import { ProtrackEntity } from './protrack.entity';
 import { ProtrackService } from './protrack.service';
 
+@Auth()
 @Resolver((of) => ProtrackEntity)
 export class ProtrackResolver {
   constructor(
@@ -26,20 +29,33 @@ export class ProtrackResolver {
   }
 
   @Query((returns) => [ProtrackEntity])
-  protracks() {
-    return this.protrackService.findAll();
+  protracks(
+    @Args('projectId', { type: () => Int }) projectId: number,
+    @Args('week', { type: () => Int }) week: number,
+    @Args('year', { type: () => Int }) year: number,
+    @User('id') userId,
+  ) {
+    return this.protrackService.findAll({
+      where: {
+        week,
+        year,
+        project: projectId,
+        user: userId,
+      },
+    });
   }
 
-  @Mutation((returns) => ProtrackEntity, { name: 'add_protrack' })
+  @Mutation((returns) => [ProtrackEntity], { name: 'add_protrack' })
   async addProtrack(
-    @Args('contributorId', { type: () => Int }) contributorId: number,
     @Args('projectId', { type: () => Int }) projectId: number,
-    @Args('protrack') protrack: CreateProtrackInput,
+    @Args('protracks', { type: () => [CreateProtrackInput] })
+    protracks: CreateProtrackInput[],
+    @User('id') userId,
   ) {
     const newProtrack = await this.protrackService.create(
-      contributorId,
+      userId,
       projectId,
-      protrack,
+      protracks,
     );
 
     this.pubSub.publish(Event.PROTRACK_ADDED, {

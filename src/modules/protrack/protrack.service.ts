@@ -27,17 +27,24 @@ export class ProtrackService {
   async create(
     contributorId: number,
     projectId: number,
-    protrack: CreateProtrackInput,
+    protracks: CreateProtrackInput[],
   ) {
     const user = await this.userService.find(contributorId);
     const project = await this.projectService.find(projectId);
 
-    const newProtrack = this.protrackRepository.create({
-      ...protrack,
-      user,
-      project,
-    });
+    const newProtracks = protracks.map((p) =>
+      this.protrackRepository.create({
+        ...p,
+        project: { id: projectId },
+      }),
+    );
 
-    return this.protrackRepository.save(newProtrack);
+    user.protracks = newProtracks;
+
+    console.log('newProtracks :>> ', newProtracks);
+
+    const { protracks: p } = await this.userService.update(user.id, user);
+
+    return p;
   }
 }

@@ -11,6 +11,7 @@ export class AuthResolver {
   @Google()
   @Mutation((returns) => AuthType)
   async googleLogin(@Args('access_token') access_token: string, @User() user) {
+    console.log('user :>> ', user);
     return this.authService.createToken(user);
   }
 }

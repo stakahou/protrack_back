@@ -8,6 +8,8 @@ type Protrack {
   update_at: DateTime!
   issue: String!
   description: String!
+  week: Int!
+  year: Int!
   user: User!
 }
 
@@ -58,7 +60,7 @@ type Query {
   projects: [Project!]!
   project_contributors(id: Int!): [User!]!
   protrack(id: Int!): Protrack!
-  protracks: [Protrack!]!
+  protracks(year: Int!, week: Int!, projectId: Int!): [Protrack!]!
 }
 
 type Mutation {
@@ -69,7 +71,7 @@ type Mutation {
   remove_project(id: Int!): Project!
   add_contributors(contributorIds: [Int!]!, projectId: Int!): Boolean!
   remove_contributors(contributorIds: [Int!]!, projectId: Int!): Boolean!
-  add_protrack(protrack: CreateProtrackInput!, projectId: Int!, contributorId: Int!): Protrack!
+  add_protrack(protracks: [CreateProtrackInput!]!, projectId: Int!): [Protrack!]!
 }
 
 input UpdateUserInput {
@@ -86,8 +88,11 @@ input UpdateProjectInput {
 }
 
 input CreateProtrackInput {
+  id: Int
   issue: String!
   description: String!
+  week: Int!
+  year: Int!
 }
 
 type Subscription {

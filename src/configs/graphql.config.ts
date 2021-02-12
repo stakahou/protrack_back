@@ -8,6 +8,9 @@ export default {
   ...configs,
   autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
   installSubscriptionHandlers: true,
-  context: ({ req, connection }) =>
-    connection ? { req: connection.context } : { req },
+  context: ({ req, connection }) => {
+    // console.log('req.headers :>> ', req.headers);
+    // console.log('connection :>> ', connection);
+    return connection ? { req: connection.context } : { headers: req.headers };
+  },
 } as GqlModuleOptions;

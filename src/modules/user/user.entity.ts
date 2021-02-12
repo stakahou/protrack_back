@@ -58,7 +58,9 @@ export class UserEntity extends BaseEntity {
   @Field((type) => [ProjectEntity])
   projects: ProjectEntity[];
 
-  @OneToMany((type) => ProtrackEntity, (protrack) => protrack.user)
+  @OneToMany((type) => ProtrackEntity, (protrack) => protrack.user, {
+    cascade: ['update', 'insert'],
+  })
   @Field((type) => [ProtrackEntity], { defaultValue: [] })
   protracks: ProtrackEntity[];
 }
